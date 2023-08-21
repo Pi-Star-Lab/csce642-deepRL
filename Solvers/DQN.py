@@ -90,12 +90,13 @@ class DQN(AbstractSolver):
 
         Use:
             self.env.action_space.n: Number of avilable actions
-            self.torch.as_tensor(state): Convert Numpy array (`state') to a tensor
-            self.model.q(state): Returns the predicted Q values for
-                `state' as a vector. One value per action.
+            self.torch.as_tensor(state): Convert Numpy array ('state') to a tensor
+            self.model(state): Returns the predicted Q values at a 
+                'state' as a tensor. One value per action.
             torch.argmax(values): Returns the index corresponding to the highest value in
-                `values' (a tensor)
+                'values' (a tensor)
         """
+        # Don't forget to convert the states to torch tensors to pass them through the network.
         ################################
         #   YOUR IMPLEMENTATION HERE   #
         ################################
@@ -118,10 +119,7 @@ class DQN(AbstractSolver):
         TD learning for q values on past transitions.
 
         Use:
-            np.random.choice(len(probs), probs): Randomly select an element
-                from probs (a list) based on the probability distribution in probs.
-            random.sample()
-            self.target_model.q(state): predicted q values as an array with entry
+            self.target_model(state): predicted q values as an array with entry
                 per action
         """
         if len(self.replay_memory) > self.options.batch_size:
@@ -173,8 +171,8 @@ class DQN(AbstractSolver):
 
         Use:
             self.epsilon_greedy(state): return probabilities of actions.
-            np.random.choice(array, p=prob): sample an element from `array' based on their corresponding
-                probabilites `prob'.
+            np.random.choice(array, p=prob): sample an element from 'array' based on their corresponding
+                probabilites 'prob'.
             self.memorize(state, action, reward, next_state, done): store the transition in the replay buffer
             self.update_target_model(): copy weights from model to target_model
             self.replay(): TD learning for q values on past transitions
