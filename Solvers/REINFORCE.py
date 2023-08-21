@@ -100,6 +100,7 @@ class Reinforce(AbstractSolver):
         action_probs = []  # Action probability
         baselines = []  # Value function
         rewards = []  # Reward per step
+        # Don't forget to convert the states to torch tensors to pass them through the network.
         for _ in range(self.options.steps):
             ################################
             #   YOUR IMPLEMENTATION HERE   #
@@ -137,8 +138,8 @@ class Reinforce(AbstractSolver):
         which should be the integral of the policy gradient.
 
         args:
-            advantage: advantage of each action a_t.
-            prob: Action probabilities.
+            advantage: advantage of the chosen action.
+            prob: probability associated with the chosen action.
 
         Use:
             torch.log: Element-wise log.
