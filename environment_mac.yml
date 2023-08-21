@@ -1,4 +1,4 @@
-name: rl689
+name: csce642
 channels:
   - apple
   - defaults
@@ -124,4 +124,3 @@ dependencies:
       - werkzeug==2.3.6
       - wrapt==1.14.1
       - zipp==3.15.0
-prefix: /Users/sheelabhadra/anaconda3/envs/rl689
