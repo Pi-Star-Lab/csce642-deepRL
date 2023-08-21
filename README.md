@@ -1,12 +1,9 @@
 # CSCE-642: Deep Reinforcement Learning
-
-
-
-## Linux installation
-- sudo apt-get install swig build-essential python-dev python3-dev
-- pip install box2d-py
-- pip install gymnasium[all]
-
-## Mac installation
-- brew install swig
-- pip install box2d-py
+SWIG is required for installing Box2D. It can be installed on Linux by running 
+```bash
+sudo apt-get install swig build-essential python-dev python3-dev
+```
+and on Mac by running
+```bash
+brew install swig
+```
