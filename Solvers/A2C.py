@@ -80,18 +80,12 @@ class A2C(AbstractSolver):
         Run a single episode of the A2C algorithm
 
         Use:
-            self.actor_critic: actor-critic network that is being learned.
-            self.policy(state): Returns action probabilities.
-            self.options.steps: Maximal number of steps per episode.
+            self.actor_critic: actor-critic network that is being learned. Returns action
+                probabilites and the critic value.
             np.random.choice(len(probs), probs): Randomly select an element
                 from probs (a list) based on the probability distribution in probs.
-            self.step(action): Performs an action in the env.
-            np.zeros(): Return an array of zeros with the a given shape.
-            self.env.reset(): Resets the env.
+            self.step(action): Performs an action in the env..
             self.options.gamma: Gamma discount factor.
-            self.actor_critic.fit(): Train the policy network at the end of an episode on the
-                observed transitions for exactly 1 epoch.
-            self.actor_critic.predict([[state]])[1][0]: the predicted state value for 'state'
         """
 
         state, _ = self.env.reset()
@@ -99,6 +93,7 @@ class A2C(AbstractSolver):
         deltas = []  # Advantage
         values = []  # Critic value
         target_values = []
+        # Don't forget to convert the states to torch tensors to pass them through the network.
         for _ in range(self.options.steps):
             ################################
             #   YOUR IMPLEMENTATION HERE   #
@@ -128,13 +123,11 @@ class A2C(AbstractSolver):
         """
         The policy gradient loss function.
         Note that you are required to define the Loss^PG
-        which should be the integral of the policy gradient
-        The "returns" is the one-hot encoded (return - baseline) value for each action a_t
-        ('0' for unchosen actions).
+        which should be the integral of the policy gradient.
 
         args:
-            advantage: advantage of each action a_t (one-hot encoded).
-            prob: Predicted actions (action probabilities).
+            advantage: advantage of the chosen action.
+            prob: probability associated with the chosen action.
 
         Use:
             torch.log: Element-wise log.
@@ -151,7 +144,7 @@ class A2C(AbstractSolver):
         The integral of the critic gradient
 
         args:
-            advantage: advantage of each action a_t (one-hot encoded).
+            advantage: advantage of the chosen action.
             value: Predicted state value.
 
         Returns:
