@@ -241,7 +241,7 @@ def main(options):
 
     random.seed(options.seed)
     env = getEnv(options.domain)
-    env._max_episode_steps = options.steps
+    env._max_episode_steps = options.steps + 1  # suppress truncation
     # if options.domain == "FlappyBird-v0":
     #     eval_env = env
     # else:
