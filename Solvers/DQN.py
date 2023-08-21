@@ -159,6 +159,7 @@ class DQN(AbstractSolver):
             # Optimize the Q-network
             self.optimizer.zero_grad()
             loss_q.backward()
+            torch.nn.utils.clip_grad_value_(self.model.parameters(), 100)
             self.optimizer.step()
 
     def memorize(self, state, action, reward, next_state, done):
