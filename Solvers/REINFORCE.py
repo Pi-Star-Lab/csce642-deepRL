@@ -11,7 +11,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
 
-from torch.optim import AdamW
+from torch.optim import Adam
 from Solvers.Abstract_Solver import AbstractSolver
 from lib import plotting
 
@@ -25,22 +25,18 @@ class PolicyNet(nn.Module):
         for i in range(len(sizes) - 2):
             self.layers.append(nn.Linear(sizes[i], sizes[i + 1]))
         # Policy head layers
-        self.layers.append(nn.Linear(hidden_sizes[-1], hidden_sizes[-1]))
         self.layers.append(nn.Linear(hidden_sizes[-1], act_dim))
         # Baseline head layers
-        self.layers.append(nn.Linear(hidden_sizes[-1], hidden_sizes[-1]))
         self.layers.append(nn.Linear(hidden_sizes[-1], 1))
 
     def forward(self, obs):
         x = torch.cat([obs], dim=-1)
-        for i in range(len(self.layers) - 4):
+        for i in range(len(self.layers) - 2):
             x = F.relu(self.layers[i](x))
         # Policy
-        probs = F.relu(self.layers[-4](x))
-        probs = F.softmax(self.layers[-3](probs), dim=-1)
+        probs = F.softmax(self.layers[-2](x), dim=-1)
         # Baseline
-        baseline = F.relu(self.layers[-2](x))
-        baseline = self.layers[-1](baseline)
+        baseline = self.layers[-1](x)
 
         return torch.squeeze(probs, -1), torch.squeeze(baseline, -1)
 
@@ -52,9 +48,7 @@ class Reinforce(AbstractSolver):
         self.model = PolicyNet(
             env.observation_space.shape[0], env.action_space.n, self.options.layers
         )
-        self.optimizer = AdamW(
-            self.model.parameters(), lr=self.options.alpha, amsgrad=True
-        )
+        self.optimizer = Adam(self.model.parameters(), lr=self.options.alpha)
 
     def create_greedy_policy(self):
         """
@@ -82,43 +76,35 @@ class Reinforce(AbstractSolver):
         #   YOUR IMPLEMENTATION HERE   #
         ################################
 
-    def train_episode(self):
+    def select_action(self, state):
         """
-        Run a single episode of the Reinforce algorithm
+        Selects an action given state.
 
-        Use:
-            self.model(state): Returns a tuple of the action probabilities and the baseline
-                for 'state' (a tensor).
-            np.random.choice(len(probs), probs): Randomly select an element
-                from probs (a list) based on the probability distribution in probs.
-            self.step(action): Performs an action in the env.
-            torch.as_tensor(array): Converts 'array' (a list) to a tensor.
-            tensor.detach().numpy(): Converts 'tensor' to a Numpy array.
+        Returns:
+            The selected action (as an int)
+            The probability of the selected action (as a tensor)
+            The baseline value (as a tensor)
         """
+        state = torch.as_tensor(state, dtype=torch.float32)
+        probs, baseline = self.model(state)
 
-        state, _ = self.env.reset()
-        action_probs = []  # Action probability
-        baselines = []  # Value function
-        rewards = []  # Reward per step
-        # Don't forget to convert the states to torch tensors to pass them through the network.
-        for _ in range(self.options.steps):
-            ################################
-            #   YOUR IMPLEMENTATION HERE   #
-            ################################
+        probs_np = probs.detach().numpy()
+        action = np.random.choice(len(probs_np), p=probs_np)
 
-        returns = self.compute_returns(rewards, self.options.gamma)
+        return action, probs[action], baseline
 
-        # Convert list to tensor
-        returns = torch.as_tensor(returns, dtype=torch.float32)
-        # Normalize returns (learning speedup trick)
-        returns = (returns - returns.mean()) / returns.std()
+    def update_model(self, rewards, action_probs, baselines):
+        """
+        Performs model update.
+        """
+        returns = torch.as_tensor(
+            self.compute_returns(rewards, self.options.gamma), dtype=torch.float32
+        )
         action_probs = torch.stack(action_probs)
         baselines = torch.stack(baselines)
 
         # Compute advantage (delta)
         deltas = returns - baselines
-        # Normalize deltas (learning speedup trick)
-        deltas = (deltas - deltas.mean()) / deltas.std()
 
         # Compute loss
         pg_loss = self.pg_loss(deltas.detach(), action_probs).mean()
@@ -130,6 +116,28 @@ class Reinforce(AbstractSolver):
         self.optimizer.zero_grad()
         loss.backward()
         self.optimizer.step()
+
+    def train_episode(self):
+        """
+        Run a single episode of the Reinforce algorithm
+
+        Use:
+            self.select_action(state): Sample an action from the policy.
+            self.step(action): Performs an action in the env.
+            self.update_model(rewards, action_probs, baselines): Update the model.
+        """
+
+        state, _ = self.env.reset()
+        rewards = []  # Reward per step
+        action_probs = []  # Action probability
+        baselines = []  # Value function
+        for _ in range(self.options.steps):
+            ################################
+            #   YOUR IMPLEMENTATION HERE   #
+            # Run update_model() only ONCE #
+            # at the END of an episode.    #
+            ################################
+
 
     def pg_loss(self, advantage, prob):
         """
