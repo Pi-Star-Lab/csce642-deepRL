@@ -11,7 +11,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
 
-from torch.optim import AdamW
+from torch.optim import Adam
 
 from Solvers.Abstract_Solver import AbstractSolver
 from lib import plotting
@@ -26,22 +26,18 @@ class ActorCriticNetwork(nn.Module):
         for i in range(len(sizes) - 2):
             self.layers.append(nn.Linear(sizes[i], sizes[i + 1]))
         # Actor head layers
-        self.layers.append(nn.Linear(hidden_sizes[-1], hidden_sizes[-1]))
         self.layers.append(nn.Linear(hidden_sizes[-1], act_dim))
         # Critic head layers
-        self.layers.append(nn.Linear(hidden_sizes[-1], hidden_sizes[-1]))
         self.layers.append(nn.Linear(hidden_sizes[-1], 1))
 
     def forward(self, obs):
         x = torch.cat([obs], dim=-1)
-        for i in range(len(self.layers) - 4):
+        for i in range(len(self.layers) - 2):
             x = F.relu(self.layers[i](x))
         # Actor head
-        probs = F.relu(self.layers[-4](x))
-        probs = F.softmax(self.layers[-3](probs), dim=-1)
+        probs = F.softmax(self.layers[-2](x), dim=-1)
         # Critic head
-        value = F.relu(self.layers[-2](x))
-        value = self.layers[-1](value)
+        value = self.layers[-1](x)
 
         return torch.squeeze(probs, -1), torch.squeeze(value, -1)
 
@@ -55,9 +51,7 @@ class A2C(AbstractSolver):
         )
         self.policy = self.create_greedy_policy()
 
-        self.optimizer = AdamW(
-            self.actor_critic.parameters(), lr=self.options.alpha, amsgrad=True
-        )
+        self.optimizer = Adam(self.actor_critic.parameters(), lr=self.options.alpha)
 
     def create_greedy_policy(self):
         """
@@ -75,42 +69,35 @@ class A2C(AbstractSolver):
 
         return policy_fn
 
-    def train_episode(self):
+    def select_action(self, state):
         """
-        Run a single episode of the A2C algorithm
+        Selects an action given state.
 
-        Use:
-            self.actor_critic: actor-critic network that is being learned. Returns action
-                probabilites and the critic value.
-            np.random.choice(len(probs), probs): Randomly select an element
-                from probs (a list) based on the probability distribution in probs.
-            self.step(action): Performs an action in the env..
-            self.options.gamma: Gamma discount factor.
+        Returns:
+            The selected action (as an int)
+            The probability of the selected action (as a tensor)
+            The critic's value estimate (as a tensor)
         """
+        state = torch.as_tensor(state, dtype=torch.float32)
+        probs, value = self.model(state)
 
-        state, _ = self.env.reset()
-        action_probs = []  # Action probability
-        deltas = []  # Advantage
-        values = []  # Critic value
-        target_values = []
-        # Don't forget to convert the states to torch tensors to pass them through the network.
-        for _ in range(self.options.steps):
-            ################################
-            #   YOUR IMPLEMENTATION HERE   #
-            ################################
+        probs_np = probs.detach().numpy()
+        action = np.random.choice(len(probs_np), p=probs_np)
 
-        target_values = torch.stack(target_values)
-        # Normalize target values (learning speedup trick)
-        target_values = (target_values - target_values.mean()) / target_values.std()
-        values = torch.stack(values)
-        deltas = target_values - values
-        # Normalize deltas (learning speedup trick)
-        deltas = (deltas - deltas.mean()) / deltas.std()
-        action_probs = torch.stack(action_probs)
+        return action, probs[action], value
 
+    def update_actor_critic(self, advantage, prob, value):
+        """
+        Performs actor critic update.
+
+        args:
+            advantage: Advantage of the chosen action (tensor).
+            prob: Probability associated with the chosen action (tensor).
+            value: Critic's state value estimate (tensor).
+        """
         # Compute loss
-        actor_loss = self.actor_loss(deltas.detach(), action_probs).mean()
-        critic_loss = self.critic_loss(deltas.detach(), values).mean()
+        actor_loss = self.actor_loss(advantage.detach(), prob).mean()
+        critic_loss = self.critic_loss(advantage.detach(), value).mean()
 
         loss = actor_loss + critic_loss
 
@@ -119,6 +106,30 @@ class A2C(AbstractSolver):
         loss.backward()
         self.optimizer.step()
 
+    def train_episode(self):
+        """
+        Run a single episode of the A2C algorithm.
+
+        Use:
+            self.select_action(state): Sample an action from the policy.
+            self.step(action): Perform an action in the env.
+            self.options.gamma: Gamma discount factor.
+            self.actor_critic(state): Returns the action probabilities and
+                the critic's estimate at a given state.
+            torch.as_tensor(state, dtype=torch.float32): Converts a numpy array
+                'state' to a tensor.
+            self.update_actor_critic(advantage, prob, value): Update actor critic. 
+        """
+
+        state, _ = self.env.reset()
+        for _ in range(self.options.steps):
+            ################################
+            #   YOUR IMPLEMENTATION HERE   #
+            # Run update_actor_critic()    #
+            # only ONCE at EACH step in    #
+            # an episode.                  # 
+            ################################
+
     def actor_loss(self, advantage, prob):
         """
         The policy gradient loss function.
@@ -126,11 +137,11 @@ class A2C(AbstractSolver):
         which should be the integral of the policy gradient.
 
         args:
-            advantage: advantage of the chosen action.
-            prob: probability associated with the chosen action.
+            advantage: Advantage of the chosen action.
+            prob: Probability associated with the chosen action.
 
         Use:
-            torch.log: Element-wise log.
+            torch.log: Element-wise logarithm.
 
         Returns:
             The unreduced loss (as a tensor).
@@ -144,8 +155,8 @@ class A2C(AbstractSolver):
         The integral of the critic gradient
 
         args:
-            advantage: advantage of the chosen action.
-            value: Predicted state value.
+            advantage: Advantage of the chosen action.
+            value: Critic's state value estimate.
 
         Returns:
             The unreduced loss (as a tensor).

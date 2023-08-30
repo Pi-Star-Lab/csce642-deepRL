@@ -1207,7 +1207,7 @@ class a2c(unittest.TestCase):
         self.__class__.points += 2
 
     def test_cartpole_reward(self):
-        command_str = " -s a2c -t 1000 -d CartPole-v1 -e 2000 -a 0.001 -g 0.99 -l [32,32] --no-plots"
+        command_str = " -s a2c -t 1000 -d CartPole-v1 -e 3000 -a 0.0001 -g 0.95 -l [64,64] --no-plots"
 
         import torch
 
@@ -1231,12 +1231,12 @@ class a2c(unittest.TestCase):
             .mean()
         )
         self.assertTrue(
-            np.mean(ep_len[:5]) < 200 and np.max(ep_len) > 950,
+            np.mean(ep_len[:5]) < 200 and np.max(ep_len[90:]) > 600,
             "got unexpected rewards for cartpole",
         )
         self.__class__.points += 1
         self.assertTrue(
-            np.mean(ep_len[:5]) < 200 and np.mean(ep_len[1800:]) > 600,
+            np.mean(ep_len[:5]) < 200 and np.max(ep_len[80:]) > 900,
             "got unexpected rewards for cartpole",
         )
         self.__class__.points += 1
@@ -1247,14 +1247,12 @@ class a2c(unittest.TestCase):
         )
 
         self.assertTrue(
-            np.mean(rewards_smoothed[1900:]) > 800
-            and np.mean(rewards_smoothed[:20]) < 100,
+            np.max(rewards_smoothed) > 900 and np.mean(rewards_smoothed[:20]) < 100,
             "got unexpected rewards for cartpole",
         )
         self.__class__.points += 1
-        print(np.mean(rewards_smoothed[1900:]))
         self.assertTrue(
-            np.mean(rewards_smoothed[1900:]) > 950
+            np.min(rewards_smoothed[2900:]) > 200
             and np.mean(rewards_smoothed[:20]) < 100,
             "got unexpected rewards for cartpole",
         )
