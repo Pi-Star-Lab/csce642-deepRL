@@ -3,7 +3,6 @@ ale-py==0.8.1
 asttokens==2.2.1
 backcall==0.2.0
 backports.functools-lru-cache==1.6.5
-box2d-py==2.3.5
 certifi==2023.7.22
 cffi==1.15.1
 charset-normalizer==3.2.0
@@ -15,7 +14,6 @@ Cython==3.0.0
 debugpy==1.6.7
 decorator==4.4.2
 entrypoints==0.4
-evdev==1.6.1
 executing==1.2.0
 Farama-Notifications==0.0.4
 fasteners==0.18

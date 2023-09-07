@@ -5,4 +5,5 @@ then
     python setup.py \
         build \
         install
+    cd -
 fi

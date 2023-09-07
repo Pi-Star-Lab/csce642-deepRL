@@ -72,6 +72,9 @@ load = [ "pkg-config",]
 [[packages]]
 load = [ "libffi",]
 
+[[packages]]
+load = [ "ffmpeg",]
+
 
 # 
 # for .so errors on linux with opencv+ffmpeg
