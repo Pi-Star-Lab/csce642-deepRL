@@ -2,6 +2,8 @@
 # Custom
 # 
 
+# it creates some build files so we just ignore the whole thing
+/repos/box2d_py/*
 
 # 
 # standard
