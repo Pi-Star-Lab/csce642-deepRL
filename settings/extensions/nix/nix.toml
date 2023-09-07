@@ -61,6 +61,9 @@ load = [ "python39Packages", "wheel",]
 load = [ "python39Packages", "numpy",]
 
 [[packages]]
+load = [ "python39Packages", "pygame",]
+
+[[packages]]
 load = [ "swig",]
 
 [[packages]]
