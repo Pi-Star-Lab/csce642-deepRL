@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = git@github.com:openai/box2d-py.git
+	branch = master
+	commit = 647d6c66710cfe3ff81b3e80522ff92624a77b41
+	parent = f2e87158107fdc52f6873a50fa5073d2172269a4
+	method = merge
+	cmdver = 0.4.1

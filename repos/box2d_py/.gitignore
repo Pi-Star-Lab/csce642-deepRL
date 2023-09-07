@@ -1,0 +1,6 @@
+build/*
+dist/*
+*.py[oc]
+*.swo
+*.swp
+*.so
