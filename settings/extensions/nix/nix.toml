@@ -3,10 +3,10 @@
 # 
     # you can search for them here: https://search.nixos.org/packages
     #
-    # if you find a package like: nixpkg.python38Packages.setuptools
+    # if you find a package like: nixpkg.python39Packages.setuptools
     # then add a section like this:
     #    [[packages]]
-    #    load = [ "python38Packages", "setuptools",]
+    #    load = [ "python39Packages", "setuptools",]
     # 
     # if you need a specific version 
     # search for the package (e.g. "setuptools") on here: https://lazamar.co.uk/nix-versions/
@@ -15,7 +15,7 @@
     # once you copy the hash, you can add the package below like
     # 
     #    [[packages]]
-    #    load = [ "python38Packages", "setuptools",]
+    #    load = [ "python39Packages", "setuptools",]
     #    from = "3f50332bc4913a56ad216ca01f5d0bd24277a6b2"
 
 # 
@@ -43,19 +43,25 @@
 # Python
 # 
 [[packages]]
-load = [ "python38",]
+load = [ "python39",]
 
 [[packages]]
-load = [ "python38Packages", "setuptools",]
+load = [ "python39Packages", "setuptools",]
 
 [[packages]]
-load = [ "python38Packages", "pip",]
+load = [ "python39Packages", "pip",]
 
 [[packages]]
-load = [ "python38Packages", "virtualenv",]
+load = [ "python39Packages", "virtualenv",]
 
 [[packages]]
-load = [ "python38Packages", "wheel",]
+load = [ "python39Packages", "wheel",]
+
+[[packages]]
+load = [ "swig",]
+
+[[packages]]
+load = [ "box2d",]
 
 [[packages]]
 load = [ "cmake",]
