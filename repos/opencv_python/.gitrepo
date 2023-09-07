@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = git@github.com:opencv/opencv-python.git
+	branch = 4.x
+	commit = 705bb5d2554b12a0c1f9ae9050e88af0c588e799
+	parent = c3ef6bbb2695164b86fe5adf92534b6aca635fec
+	method = merge
+	cmdver = 0.4.1
