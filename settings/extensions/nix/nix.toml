@@ -58,6 +58,9 @@ load = [ "python39Packages", "virtualenv",]
 load = [ "python39Packages", "wheel",]
 
 [[packages]]
+load = [ "python39Packages", "numpy",]
+
+[[packages]]
 load = [ "swig",]
 
 [[packages]]

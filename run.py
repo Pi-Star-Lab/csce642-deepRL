@@ -19,7 +19,11 @@ gym.logger.set_level(40)
 if "../" not in sys.path:
     sys.path.append("../")
 
-from pynput import keyboard
+# this will fail if ssh-ing without X11 forwarding
+try:
+    from pynput import keyboard
+except Exception as error:
+    keyboard = None
 from lib import plotting
 from Solvers.Abstract_Solver import AbstractSolver, Statistics
 import Solvers.Available_solvers as avs
@@ -264,8 +268,11 @@ def main(options):
     stats = plotting.EpisodeStats(episode_lengths=[], episode_rewards=[])
 
     # Detects key press for rendering
-    listener = keyboard.Listener(on_press=on_press)
-    listener.start()  # start listening on a separate thread
+    try:
+        listener = keyboard.Listener(on_press=on_press)
+        listener.start()  # start listening on a separate thread
+    except Exception as error:
+        listener = None
 
     plt.ion()
 

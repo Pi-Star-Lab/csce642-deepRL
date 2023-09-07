@@ -17,4 +17,7 @@ then
     echo '                                                                                        '
     echo '****************************************************************************************'
     echo '                              Setting up your Environment!                              '
+    echo '  '
+    echo 'If this is your first time running this, it might take a few hours. Grab some popcorn 🍿'
+    echo '  '
 fi
