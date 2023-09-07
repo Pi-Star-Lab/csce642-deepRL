@@ -421,7 +421,7 @@ class mc(unittest.TestCase):
                 return np.array([0, 1])
 
         def dummy_reset():
-            return (14, 10, False)
+            return (14, 10, False), {}
 
         def dummy_step(action):
 
@@ -496,7 +496,7 @@ class mcis(unittest.TestCase):
             return action
 
         def dummy_reset():
-            return 0
+            return 0, {}
 
         def dummy_step(action):
             if action == 3:
