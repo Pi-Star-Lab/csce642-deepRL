@@ -5,7 +5,6 @@
 # This CSCE-689 RL assignment codebase was developed at Texas A&M University.
 # The core code base was developed by Guni Sharon (guni@tamu.edu).
 
-import flappy_bird_gymnasium
 import gymnasium as gym
 import optparse
 import sys
@@ -191,8 +190,6 @@ def getEnv(domain, render_mode=""):
         return CliffWalkingEnv()
     elif domain == "WindyGridworld":
         return WindyGridworldEnv()
-    elif domain == "FlappyBird-v0":
-        return gym.make(domain)
     else:
         try:
             return gym.make(domain, render_mode=render_mode)
