@@ -15,7 +15,6 @@ Cython==3.0.0
 debugpy==1.6.7
 decorator==4.4.2
 entrypoints==0.4
-evdev==1.6.1
 executing==1.2.0
 Farama-Notifications==0.0.4
 fasteners==0.18
