@@ -98,8 +98,7 @@ class PolicyIteration(AbstractSolver):
 
 
         Returns:
-            A function that takes an observation as input and returns a vector
-            of action probabilities.
+            A function that takes an observation as input and action as integer
         """
         def policy_fn(state):
             return np.argmax(self.policy[state])
