@@ -42,7 +42,7 @@ class ValueIteration(AbstractSolver):
                 `reward` is the short-term/immediate reward for achieving that next state
                 `done` is a boolean of wether or not that next state is the last/terminal state
 
-                Every action has a chance (at least theortically) of different outcomes (states)
+                Every action has a chance (at least theoretically) of different outcomes (states)
                 Which is why `self.P[state][action]` is a list of outcomes and not a single outcome
 
             self.options.gamma:
@@ -134,10 +134,7 @@ class ValueIteration(AbstractSolver):
                     The discount factor (gamma from the slides)
 
             Outputs: (what you need to output)
-                return a list
-                    len(the_list) should be the number of actions
-                    the action we want to take should have a value of 1
-                    all other actions should have a value of 0
+                return action as an integer
             """
             ################################
             #   YOUR IMPLEMENTATION HERE   #
