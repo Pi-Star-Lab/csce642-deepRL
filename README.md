@@ -11,18 +11,7 @@ and on Mac by running
 brew install swig
 ```
 
-For setting up the environment, we recommend using conda.
-
-For linux run
-```bash
-conda env create --file=environment_linux.yml
-```
-
-
-For mac run (Tested on M1 and M2 chips)
-```bash
-conda env create --file=environment_mac.yml
-```
+For setting up the environment, we recommend using conda + pip or virtual env + pip. The Python environment required is 3.9.16
 
 For Windows consider setting up a Python environment with version 3.9.16. Install the packages given by
 ```bash
