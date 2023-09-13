@@ -79,7 +79,7 @@ class A2C(AbstractSolver):
             The critic's value estimate (as a tensor)
         """
         state = torch.as_tensor(state, dtype=torch.float32)
-        probs, value = self.model(state)
+        probs, value = self.actor_critic(state)
 
         probs_np = probs.detach().numpy()
         action = np.random.choice(len(probs_np), p=probs_np)
