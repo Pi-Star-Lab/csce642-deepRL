@@ -67,6 +67,9 @@ load = [ "python39Packages", "pygame",]
 load = [ "python39Packages", "opencv4",]
 
 [[packages]]
+load = [ "python39Packages", "torch",]
+
+[[packages]]
 load = [ "swig",]
 
 [[packages]]

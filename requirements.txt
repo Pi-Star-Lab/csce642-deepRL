@@ -84,7 +84,6 @@ stack-data==0.6.2
 swig==4.1.1
 sympy==1.12
 threadpoolctl==3.2.0
-torch==2.0.1
 tornado==6.1
 tqdm==4.66.1
 traitlets==5.9.0
