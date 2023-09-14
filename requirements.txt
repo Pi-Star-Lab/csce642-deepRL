@@ -94,3 +94,4 @@ wcwidth==0.2.6
 wheel==0.38.4
 zipp==3.16.2
 scikit_build==0.17.6
+torch==2.0.1

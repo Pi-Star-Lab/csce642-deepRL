@@ -62,12 +62,14 @@ load = [ "python39Packages", "numpy",]
 
 [[packages]]
 load = [ "python39Packages", "pygame",]
+from = "ce6aa13369b667ac2542593170993504932eb836"
 
 [[packages]]
 load = [ "python39Packages", "opencv4",]
 
 [[packages]]
 load = [ "python39Packages", "torch",]
+onlyIf = [ [ "stdenv", "isLinux",],]
 
 [[packages]]
 load = [ "swig",]
