@@ -20,10 +20,6 @@ if "../" not in sys.path:
     sys.path.append("../")
 
 # this will fail if ssh-ing without X11 forwarding
-try:
-    from pynput import keyboard
-except Exception as error:
-    keyboard = None
 from lib import plotting
 from Solvers.Abstract_Solver import AbstractSolver, Statistics
 import Solvers.Available_solvers as avs
@@ -216,19 +212,6 @@ def parse_list(string):
 render = False
 
 
-def on_press(key):
-    if key == keyboard.Key.esc:
-        return False  # stop listener
-    try:
-        k = key.char  # single char keys
-    except:
-        k = key.name  # other keys
-    if k in ["^"]:
-        print(f"Key pressed: {k}")
-        global render
-        render = True
-
-
 def main(options):
     resultdir = "Results/"
 
@@ -266,16 +249,9 @@ def main(options):
 
     # Keeps track of useful statistics
     stats = plotting.EpisodeStats(episode_lengths=[], episode_rewards=[])
-
-    # Detects key press for rendering
-    try:
-        listener = keyboard.Listener(on_press=on_press)
-        listener.start()  # start listening on a separate thread
-    except Exception as error:
-        listener = None
-
+    
     plt.ion()
-
+    
     with open(os.path.join(resultdir, options.outfile + ".csv"), "a+") as result_file:
         result_file.write("\n")
         for i_episode in range(options.episodes):
