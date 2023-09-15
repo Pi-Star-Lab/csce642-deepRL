@@ -288,7 +288,8 @@ def main(options):
                 solver.run_greedy()
                 render = False
             if (
-                options.solver in ["ql", "sarsa", "aql", "dqn", "reinforce", "a2c"]
+                options.solver
+                in ["ql", "sarsa", "aql", "dqn", "reinforce", "a2c", "ddpg"]
                 and not options.disable_plots
             ):
                 solver.plot(stats, int(0.1 * options.episodes), False)
