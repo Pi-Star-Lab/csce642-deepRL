@@ -18,7 +18,6 @@ gym.logger.set_level(40)
 if "../" not in sys.path:
     sys.path.append("../")
 
-from pynput import keyboard
 from lib import plotting
 from Solvers.Abstract_Solver import AbstractSolver, Statistics
 import Solvers.Available_solvers as avs
@@ -210,6 +209,7 @@ render = False
 
 
 def on_press(key):
+    from pynput import keyboard
     if key == keyboard.Key.esc:
         return False  # stop listener
     try:
@@ -260,11 +260,13 @@ def main(options):
     # Keeps track of useful statistics
     stats = plotting.EpisodeStats(episode_lengths=[], episode_rewards=[])
 
-    # Detects key press for rendering
-    listener = keyboard.Listener(on_press=on_press)
-    listener.start()  # start listening on a separate thread
-
     plt.ion()
+    if not options.disable_plots:
+        # Detects key press for rendering
+        from pynput import keyboard
+        listener = keyboard.Listener(on_press=on_press)
+        listener.start()  # start listening on a separate thread
+
 
     with open(os.path.join(resultdir, options.outfile + ".csv"), "a+") as result_file:
         result_file.write("\n")
