@@ -41,7 +41,7 @@ class PolicyIteration(AbstractSolver):
         # For each state...
         for s in range(self.env.observation_space.n):
             # Find the best action by one-step lookahead
-            # Ties are resolved arbitarily
+            # Ties are resolved by returning the first action with maximum value (Hint: use max/argmax directly).
 
             ################################
             #   YOUR IMPLEMENTATION HERE   #
@@ -98,7 +98,7 @@ class PolicyIteration(AbstractSolver):
 
 
         Returns:
-            A function that takes an observation as input and action as integer
+            A function that takes an observation as input and greedy action as integer
         """
         def policy_fn(state):
             return np.argmax(self.policy[state])
