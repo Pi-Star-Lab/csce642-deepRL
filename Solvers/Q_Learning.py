@@ -132,7 +132,8 @@ class ApproxQLearning(QLearning):
         Use:
             self.env.action_space.n: size of the action space
             np.argmax(self.Q[state]): action with highest q value
-
+        Returns:
+            Probability of taking actions as a vector where each entry is the probability of taking that action
         """
         ################################
         #   YOUR IMPLEMENTATION HERE   #
