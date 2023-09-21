@@ -84,7 +84,6 @@ class PolicyIteration(AbstractSolver):
                 env.P[s][a] is a list of transition tuples (prob, next_state, reward, done).
                 env.nS is a number of states in the environment.
                 env.nA is a number of actions in the environment.
-            theta: We stop evaluation once our value function change is less than theta for all states.
             self.options.gamma: Gamma discount factor.
             np.linalg.solve(a, b) # Won't work with discount factor = 0!
         """
