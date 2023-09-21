@@ -362,7 +362,7 @@ class pi(unittest.TestCase):
         np.linalg.solve = custom_solver
         solver.policy_eval()
         np.linalg.solve = og_solver
-        self.assertTrue(1 == calls, "Make sure you the linear equation provided to np.linalg.solve is correct")
+        self.assertTrue(1 == calls, "Make sure you the linear equation coefficients provided to np.linalg.solve is correct")
         self.__class__.fail = False
 
     def test_grid_world_1_reward(self):
