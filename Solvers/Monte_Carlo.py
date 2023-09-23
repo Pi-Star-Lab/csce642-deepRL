@@ -102,8 +102,6 @@ class MonteCarlo(AbstractSolver):
             action
 
         Use:
-            np.zeros_like(self.Q[state], dtype=float): a zero vector of
-                size number of actions.
             np.argmax(self.Q[state]): action with highest q value
         """
 
