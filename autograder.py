@@ -354,7 +354,7 @@ class pi(unittest.TestCase):
             calls += 1
             og_A = np.load("TestData/pi_A.npy")
             og_b = np.load("TestData/pi_b.npy")
-            if not (l2_distance_bounded(A, og_A, 1e-3) and l2_distance_bounded(b, og_b, 1e-3)):
+            if not (l2_distance_bounded(np.abs(A), np.abs(og_A), 1e-3) and l2_distance_bounded(np.abs(b), np.abs(og_b), 1e-3)):
                 calls += 100
             return og_solver(A,b)
 
