@@ -1,9 +1,10 @@
 # Licensing Information:  You are free to use or extend this codebase for
 # educational purposes provided that (1) you do not distribute or publish
-# solutions, (2) you retain this notice, and (3) you provide the following
-# attribution:
-# This CSCE-689 RL assignment codebase was developed at Texas A&M University.
-# The core code base was developed by Guni Sharon (guni@tamu.edu).
+# solutions, (2) you retain this notice, and (3) inform Guni Sharon at 
+# guni@tamu.edu regarding your usage (relevant statistics is reported to NSF).
+# The development of this assignment was supported by NSF (IIS-2238979).
+# Contributors:
+# The core code was developed by Guni Sharon (guni@tamu.edu).
 # The PyTorch code was developed by Sheelabhadra Dey (sheelabhadra@tamu.edu).
 
 import torch
