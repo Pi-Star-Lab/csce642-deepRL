@@ -23,15 +23,15 @@ class PolicyIteration(AbstractSolver):
 
     def train_episode(self):
         """
-            Run a single Policy iteration. Evaluate and improves the policy.
+            Run a single Policy iteration. Evaluate and improve the policy.
 
             Use:
                 self.policy: [S, A] shaped matrix representing the policy.
                 self.env: OpenAI environment.
                     env.P represents the transition probabilities of the environment.
                     env.P[s][a] is a list of transition tuples (prob, next_state, reward, done).
-                    env.nS is a number of states in the environment.
-                    env.nA is a number of actions in the environment.
+                    env.observation_space.n is the number of states in the environment.
+                    env.action_space.n is the number of actions in the environment.
                 self.options.gamma: Gamma discount factor.
                 np.eye(self.env.action_space.n)[action]
         """
@@ -42,7 +42,7 @@ class PolicyIteration(AbstractSolver):
         # For each state...
         for s in range(self.env.observation_space.n):
             # Find the best action by one-step lookahead
-            # Ties are resolved by returning the first action with maximum value (Hint: use max/argmax directly).
+            # Ties are resolved in favor of actions with lower indexes (Hint: use max/argmax directly).
 
             ################################
             #   YOUR IMPLEMENTATION HERE   #
@@ -59,14 +59,14 @@ class PolicyIteration(AbstractSolver):
 
     def one_step_lookahead(self, state):
         """
-        Helper function to calculate the value for all action in a given state.
+        Helper function to calculate the value for all actions from a given state.
 
         Args:
             state: The state to consider (int)
-            V: The value to use as an estimator, Vector of length env.nS
+            V: The value to use as an estimator, Vector of length env.observation_space.n
 
         Returns:
-            A vector of length env.nA containing the expected value of each action.
+            A vector of length env.action_space.n containing the expected value of each action.
         """
         A = np.zeros(self.env.action_space.n)
         for a in range(self.env.action_space.n):
@@ -83,8 +83,8 @@ class PolicyIteration(AbstractSolver):
             self.policy: [S, A] shaped matrix representing the policy.
             self.env: OpenAI env. env.P represents the transition probabilities of the environment.
                 env.P[s][a] is a list of transition tuples (prob, next_state, reward, done).
-                env.nS is a number of states in the environment.
-                env.nA is a number of actions in the environment.
+                env.observation_space.n is the number of states in the environment.
+                env.action_space.n is the number of actions in the environment.
             self.options.gamma: Gamma discount factor.
             np.linalg.solve(a, b) # Won't work with discount factor = 0!
         """
