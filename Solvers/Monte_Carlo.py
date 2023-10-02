@@ -38,7 +38,7 @@ class MonteCarlo(AbstractSolver):
 
     def train_episode(self):
         """
-        Run a single episode for Monte Carlo Control using Epsilon-Greedy policies.
+        Run a single episode for (first visit) Monte Carlo Control using Epsilon-Greedy policies.
 
         Use:
             self.options.env: OpenAI gym environment.
