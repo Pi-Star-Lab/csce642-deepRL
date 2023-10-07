@@ -1286,6 +1286,29 @@ class a2c(unittest.TestCase):
         print("\nTotal Points: {} / 10".format(cls.points))
 
 
+class ddpg(unittest.TestCase):
+    points = 0
+
+    @classmethod
+    def setUpClass(self):
+        command_str = (
+            "-s ddpg -t 1000 -d LunarLanderContinuous-v2 -e 10 -a 0.001 -g 0.99 -l [64,64] -b 100 --no-plots"
+        )
+        self.results = run_main(command_str)
+        solver = self.results["solver"]
+        torch.save(solver.actor_critic, 'TestData/test_ddpg_ac_lunar_lander.pth')
+    def test_compute_target_values(self):
+        pass 
+    def test_pi_loss(self):
+        pass
+    def test_train_episode(self):
+        pass
+
+    @classmethod
+    def tearDownClass(cls):
+        print("\nTotal Points: {} / 10".format(cls.points))
+
+
 if __name__ == "__main__":
     import sys
 
