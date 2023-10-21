@@ -9,6 +9,12 @@
 import numpy as np
 from Solvers.Abstract_Solver import AbstractSolver, Statistics
 
+def get_random_policy(num_states, num_actions):
+    policy = np.zeros([num_states, num_actions])
+    for s_idx in range(num_states):
+        action = s_idx % num_actions
+        policy[s_idx, action] = 1
+    return policy
 
 class PolicyIteration(AbstractSolver):
 
@@ -19,7 +25,9 @@ class PolicyIteration(AbstractSolver):
         super().__init__(env, eval_env, options)
         self.V = np.zeros(env.observation_space.n)
         # Start with a random policy
-        self.policy = np.ones([env.observation_space.n, env.action_space.n]) / env.action_space.n
+        # self.policy[s,a] denotes \pi(a|s)
+        # Note: Policy is determistic i.e., only one element in self.policy[s,:] is 1 rest are 0
+        self.policy = get_random_policy(env.observation_space.n, env.action_space.n)
 
     def train_episode(self):
         """
@@ -27,6 +35,8 @@ class PolicyIteration(AbstractSolver):
 
             Use:
                 self.policy: [S, A] shaped matrix representing the policy.
+                             self.policy[s,a] denotes \pi(a|s)
+                             Note: Policy is determistic i.e., only one element in self.policy[s,:] is 1 rest are 0
                 self.env: OpenAI environment.
                     env.P represents the transition probabilities of the environment.
                     env.P[s][a] is a list of transition tuples (prob, next_state, reward, done).
@@ -81,6 +91,8 @@ class PolicyIteration(AbstractSolver):
 
         Use:
             self.policy: [S, A] shaped matrix representing the policy.
+                         self.policy[s,a] denotes \pi(a|s)
+                         Note: Policy is determistic i.e., only one element in self.policy[s,:] is 1 rest are 0
             self.env: OpenAI env. env.P represents the transition probabilities of the environment.
                 env.P[s][a] is a list of transition tuples (prob, next_state, reward, done).
                 env.observation_space.n is the number of states in the environment.
