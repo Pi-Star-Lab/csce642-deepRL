@@ -108,7 +108,7 @@ class DQN(AbstractSolver):
         Computes the target q values.
 
         Returns:
-            The target q value (as a tensor).
+            The target q value (as a tensor) of shape [len(next_states)]
         """
         ################################
         #   YOUR IMPLEMENTATION HERE   #
