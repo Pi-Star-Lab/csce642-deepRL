@@ -980,7 +980,7 @@ class dqn(unittest.TestCase):
         )
         dummy_done = torch.tensor([1], dtype=torch.float32)
         self.assertEqual(
-            solver.compute_target_values(dummy_next_state, dummy_reward, dummy_done)
+            solver.compute_target_values(dummy_next_state, dummy_reward, dummy_done).reshape(-1)
             .detach()
             .item(),
             10,
