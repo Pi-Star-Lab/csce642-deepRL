@@ -974,6 +974,7 @@ class dqn(unittest.TestCase):
         )
         # Test 2
         dummy_reward = torch.tensor([10], dtype=torch.float32)
+        dummy_next_state = dummy_next_state.reshape(1,-1)
         dummy_next_state = torch.tensor(
             [-2.1429, 0.8679, 0.2397, -0.5396, 0.3134, 0.5916, -1.1758, 0.0649],
             dtype=torch.float32,
