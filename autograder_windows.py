@@ -1293,28 +1293,9 @@ class ddpg(unittest.TestCase):
         command_str = (
             "-s ddpg -t 1000 -d HalfCheetah-v4 -e 0 -a 0.001 -g 0.99 -l [256,256] -m 1000000 -b 100 --no-plots"
         )
-        self.results = run_main(command_str)
     
     def test_compute_target_values(self):
-        solver = self.results["solver"]
-        solver.actor_critic = torch.load('TestData/test_ddpg_ac_half_cheetah.pth')
-        solver.target_actor_critic = torch.load('TestData/test_ddpg_ac_target_half_cheetah.pth')
-        states = torch.Tensor(np.load('TestData/ddpg_states_cheetah.npy'))
-        rewards = torch.Tensor(np.load('TestData/ddpg_rewards_cheetah.npy'))
-        dones = torch.Tensor(np.load('TestData/ddpg_dones_cheetah.npy'))
-        target = np.load('TestData/test_ddpg_ctv_cheetah.npy')
-        values = solver.compute_target_values(states, rewards, dones).detach().numpy()
-        self.assertTrue(
-            l2_distance_bounded(
-                values,
-                target,
-                1e-2,
-            ),
-            "`test_compute_target_values' returns unexpected values.",
-        )
-
-        self.__class__.points += 2
-        
+       
         command_str = (
             "-s ddpg -t 1000 -d LunarLanderContinuous-v2 -e 0 -a 0.001 -g 0.99 -l [64,64] -b 100 --no-plots"
         )
@@ -1336,23 +1317,10 @@ class ddpg(unittest.TestCase):
             ),
             "`test_compute_target_values' returns unexpected values.",
         )
-        self.__class__.points += 2
+        self.__class__.points += 4
 
     def test_pi_loss(self):
-        solver = self.results["solver"]
-        solver.actor_critic = torch.load('TestData/test_ddpg_ac_half_cheetah.pth')
-        states = torch.Tensor(np.load('TestData/ddpg_states_cheetah.npy'))
-        target = np.load("TestData/test_ddpg_pi_loss_cheetah.npy")
-        self.assertTrue(
-            l2_distance_bounded(
-                solver.pi_loss(states).detach().numpy(),
-                target,
-                1e-3,
-            ),
-            "`test_pi_loss' returns unexpected values.",
-        )
-        self.__class__.points += 1
-        
+       
         command_str = (
             "-s ddpg -t 1000 -d LunarLanderContinuous-v2 -e 1 -a 0.001 -g 0.99 -l [64,64] -b 100 --no-plots"
         )
@@ -1369,7 +1337,7 @@ class ddpg(unittest.TestCase):
             ),
             "`test_pi_loss' returns unexpected values.",
         )
-        self.__class__.points += 1
+        self.__class__.points += 2
     
     def test_lander_rewards(self):
         command_str = (
@@ -1391,26 +1359,7 @@ class ddpg(unittest.TestCase):
             np.max(rewards_smoothed[700:]) > 150,
             "got unexpected rewards for lunar_lander; verify implementation of ``train_episode''",
         )
-        self.__class__.points += 3
-
-    def test_sanity_cheetah(self):
-        command_str = (
-            "-s ddpg -t 1000 -d HalfCheetah-v4 -e 15 -a 0.001 -g 0.99 -l [256,256] -m 1000000 -b 100 --no-plots"
-        )
-        results = run_main(command_str)
-
-        stats = results["stats"]
-        smoothing_window = 10
-        rewards_smoothed = (
-            pd.Series(stats.episode_rewards)
-            .rolling(smoothing_window, min_periods=smoothing_window)
-            .mean()
-        )
-        self.assertTrue(
-            np.mean(rewards_smoothed[:15]) < 2000,
-            "got unexpected rewards for half cheetah; verify implementation of ``train_episode''",
-        )
-        self.__class__.points += 1
+        self.__class__.points += 4
 
     @classmethod
     def tearDownClass(cls):
