@@ -1036,7 +1036,7 @@ class dqn(unittest.TestCase):
             np.max(rewards_smoothed) > 900 and np.mean(rewards_smoothed[:20]) < 100,
             "got unexpected rewards for cartpole",
         )
-        self.__class__.points += 2
+        self.__class__.points += 1
 
     @classmethod
     def tearDownClass(cls):
