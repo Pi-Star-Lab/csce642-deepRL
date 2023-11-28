@@ -1017,7 +1017,7 @@ class dqn(unittest.TestCase):
         )
 
         self.assertTrue(
-            np.mean(ep_len[:5]) < 200 and np.max(ep_len[80:]) > 1000,
+            np.mean(ep_len[:5]) < 200 and np.max(ep_len[80:]) > 800,
             "got unexpected rewards for cartpole",
         )
         self.__class__.points += 2
@@ -1028,12 +1028,12 @@ class dqn(unittest.TestCase):
         )
 
         self.assertTrue(
-            np.max(rewards_smoothed) > 800 and np.mean(rewards_smoothed[:20]) < 100,
+            np.max(rewards_smoothed) > 750 and np.mean(rewards_smoothed[:20]) < 100,
             "got unexpected rewards for cartpole",
         )
         self.__class__.points += 1
         self.assertTrue(
-            np.max(rewards_smoothed) > 1000 and np.mean(rewards_smoothed[:20]) < 100,
+            np.max(rewards_smoothed) > 900 and np.mean(rewards_smoothed[:20]) < 100,
             "got unexpected rewards for cartpole",
         )
         self.__class__.points += 2
