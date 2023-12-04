@@ -178,7 +178,7 @@ class DQN(AbstractSolver):
             self.update_target_model(): copy weights from model to target_model
             self.replay(): TD learning for q values on past transitions
             self.options.update_target_estimator_every: Copy parameters from the Q estimator to the
-                target estimator every N steps
+                target estimator every N steps (HINT: to be done across episodes)
         """
 
         # Reset the environment
