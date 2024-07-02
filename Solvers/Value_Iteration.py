@@ -1,9 +1,8 @@
 # Licensing Information:  You are free to use or extend this codebase for
 # educational purposes provided that (1) you do not distribute or publish
-# solutions, (2) you retain this notice, and (3) inform Guni Sharon at 
-# guni@tamu.edu regarding your usage (relevant statistics is reported to NSF).
-# The development of this assignment was supported by NSF (IIS-2238979).
-# Contributors:
+# solutions, (2) you retain this notice, and (3) you provide the following
+# attribution:
+# This CSCE-689 RL assignment codebase was developed at Texas A&M University.
 # The core code base was developed by Guni Sharon (guni@tamu.edu).
 
 import numpy as np
@@ -27,24 +26,24 @@ class ValueIteration(AbstractSolver):
         Inputs: (Available/Useful variables)
             self.env
                 this the OpenAI GYM environment
-                     see https://gymnasium.farama.org/index.html
+                     see http://gym.openai.com/
 
-            state, _ = self.env.reset():
+            state = self.env.reset():
                 Resets the environment and returns the starting state
 
-            self.env.observation_space.n:
+            self.env.nS:
                 number of states in the environment
 
-            self.env.action_space.n:
+            self.env.nA:
                 number of actions in the environment
 
-            for probability, next_state, reward, done in self.env.P[state][action]:
+            for probability, next_state, reward, done in self.P[state][action]:
                 `probability` will be probability of `next_state` actually being the next state
                 `reward` is the short-term/immediate reward for achieving that next state
-                `done` is a boolean of whether or not that next state is the last/terminal state
+                `done` is a boolean of wether or not that next state is the last/terminal state
 
                 Every action has a chance (at least theoretically) of different outcomes (states)
-                This is why `self.env.P[state][action]` is a list of outcomes and not a single outcome
+                Which is why `self.P[state][action]` is a list of outcomes and not a single outcome
 
             self.options.gamma:
                 The discount factor (gamma from the slides)
@@ -59,7 +58,7 @@ class ValueIteration(AbstractSolver):
                 How should this be calculated?
                     look at the value iteration algorithm
                     Ref: Sutton book eq. 4.10.
-                Once those values have been updated, that's it for this function/class
+                Once those values have been updated, thats it for this function/class
         """
 
         # you can add variables here if it is helpful
@@ -68,10 +67,8 @@ class ValueIteration(AbstractSolver):
         for each_state in range(self.env.observation_space.n):
             # Do a one-step lookahead to find the best action
             # Update the value function. Ref: Sutton book eq. 4.10.
-            ################################
-            #   YOUR IMPLEMENTATION HERE   #
-            ################################
-
+            self.V[each_state]= max(self.one_step_lookahead(each_state))
+    
         # Dont worry about this part
         self.statistics[Statistics.Rewards.value] = np.sum(self.V)
         self.statistics[Statistics.Steps.value] = -1
@@ -81,12 +78,12 @@ class ValueIteration(AbstractSolver):
 
     def one_step_lookahead(self, state: int):
         """
-        Helper function to calculate the value for all actions from a given state.
+        Helper function to calculate the value for all action in a given state.
         Args:
             state: The state to consider (int)
-            V: The value to use as an estimator, Vector of length self.env.observation_space.n
+            V: The value to use as an estimator, Vector of length env.nS
         Returns:
-            A vector of length self.env.action_space.n containing the expected value of each action.
+            A vector of length env.nA containing the expected value of each action.
         """
         A = np.zeros(self.env.action_space.n)
         for a in range(self.env.action_space.n):
@@ -98,7 +95,7 @@ class ValueIteration(AbstractSolver):
         """
         Creates a greedy policy based on state values.
         Use:
-            self.env.action_space.n: Number of actions in the environment.
+            self.env.nA: Number of actions in the environment.
         Returns:
             A function that takes an observation as input and returns a Greedy
                action
@@ -117,18 +114,18 @@ class ValueIteration(AbstractSolver):
                     len(values) will be the number of actions (self.env.nA)
                     values[action] will be the expected value of that action (float)
 
-                for probability, next_state, reward, done in self.env.P[state][action]:
-                    `probability` will be the probability of `next_state` actually being the next state
+                for probability, next_state, reward, done in self.P[state][action]:
+                    `probability` will be probability of `next_state` actually being the next state
                     `reward` is the short-term/immediate reward for achieving that next state
-                    `done` is a boolean of whether or not that next state is the last/terminal state
+                    `done` is a boolean of wether or not that next state is the last/terminal state
 
-                    Every action has a chance (at least theoretically) of different outcomes (states)
-                    This is why `self.env.P[state][action]` is a list of outcomes and not a single outcome
+                    Every action has a chance (at least theortically) of different outcomes (states)
+                    Which is why `self.P[state][action]` is a list of outcomes and not a single outcome
 
-                self.self.env.observation_space.n:
+                self.env.nS:
                     number of states in the environment
 
-                self.self.env.action_space.n:
+                self.env.nA:
                     number of actions in the environment
 
                 self.options.gamma:
@@ -137,10 +134,7 @@ class ValueIteration(AbstractSolver):
             Outputs: (what you need to output)
                 return action as an integer
             """
-            ################################
-            #   YOUR IMPLEMENTATION HERE   #
-            ################################
-            
+            return np.argmax(self.one_step_lookahead(state))
 
         return policy_fn
 
@@ -185,13 +179,14 @@ class AsynchVI(ValueIteration):
             self.V
                 this is still the same as the previous
         """
-
-        #########################################################
-        # YOUR IMPLEMENTATION HERE                              #
         # Choose state with the maximal value change potential  #
         # Do a one-step lookahead to find the best action       #
         # Update the value function. Ref: Sutton book eq. 4.10. #
-        #########################################################
+        state = self.pq.pop()
+        self.V[state] = max(self.one_step_lookahead(state))
+
+        for s_prime in self.pred[state]:
+            self.pq.update(s_prime, -abs(self.V[s_prime] - max(self.one_step_lookahead(s_prime))))
 
         # you can ignore this part
         self.statistics[Statistics.Rewards.value] = np.sum(self.V)
