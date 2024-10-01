@@ -146,7 +146,7 @@ class OffPolicyMC(MonteCarlo):
         Run a single episode of Monte Carlo Control Off-Policy Control using Weighted Importance Sampling.
 
         Use:
-            elf.env: OpenAI environment.
+            self.env: OpenAI environment.
             self.options.steps: steps per episode
             self.behavior_policy(state): returns a soft policy which is the
                 behavior policy (act according to this policy)
