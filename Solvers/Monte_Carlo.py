@@ -76,7 +76,7 @@ class MonteCarlo(AbstractSolver):
         Use:
             self.Q: A dictionary that maps from state -> action-values.
                 Each value is a numpy array of length nA
-            self.options.epsilon: Chance the sample a random action. Float betwen 0 and 1.
+            self.options.epsilon: Chance the sample a random action. Float between 0 and 1.
             self.env.action_space.n: Number of actions in the environment.
 
         Returns:
