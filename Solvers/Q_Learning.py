@@ -75,6 +75,7 @@ class QLearning(AbstractSolver):
             ################################
             #   YOUR IMPLEMENTATION HERE   #
             ################################
+            return -1
 
         return policy_fn
 
@@ -154,6 +155,7 @@ class ApproxQLearning(QLearning):
             ################################
             #   YOUR IMPLEMENTATION HERE   #
             ################################
+            return -1
             
 
         return policy_fn
