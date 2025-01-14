@@ -76,7 +76,7 @@ class MonteCarlo(AbstractSolver):
         Use:
             self.Q: A dictionary that maps from state -> action-values.
                 Each value is a numpy array of length nA
-            self.options.epsilon: Chance the sample a random action. Float betwen 0 and 1.
+            self.options.epsilon: Chance the sample a random action. Float between 0 and 1.
             self.env.action_space.n: Number of actions in the environment.
 
         Returns:
@@ -146,7 +146,7 @@ class OffPolicyMC(MonteCarlo):
         Run a single episode of Monte Carlo Control Off-Policy Control using Weighted Importance Sampling.
 
         Use:
-            elf.env: OpenAI environment.
+            self.env: OpenAI environment.
             self.options.steps: steps per episode
             self.behavior_policy(state): returns a soft policy which is the
                 behavior policy (act according to this policy)
