@@ -1,44 +1,44 @@
 name: csce642
 channels:
   - apple
+  - conda-forge
   - defaults
 dependencies:
-  - abseil-cpp=20211102.0=hc377ac9_0
-  - blas=1.0=openblas
-  - c-ares=1.19.0=h80987f9_0
-  - ca-certificates=2023.05.30=hca03da5_0
-  - grpc-cpp=1.48.2=h877324c_0
-  - grpcio=1.48.2=py39h877324c_0
-  - h5py=3.6.0=py39h7fe8675_0
-  - hdf5=1.12.1=h160e8cb_2
-  - krb5=1.19.4=h8380606_0
-  - libcurl=7.88.1=h0f1d93c_0
-  - libcxx=14.0.6=h848a8c0_0
-  - libedit=3.1.20221030=h80987f9_0
-  - libev=4.33=h1a28f6b_1
-  - libffi=3.4.4=hca03da5_0
-  - libgfortran=5.0.0=11_3_0_hca03da5_28
-  - libgfortran5=11.3.0=h009349e_28
-  - libnghttp2=1.46.0=h95c9599_0
-  - libopenblas=0.3.21=h269037a_0
-  - libprotobuf=3.20.3=h514c7bf_0
-  - libssh2=1.10.0=hf27765b_0
-  - llvm-openmp=14.0.6=hc6e5704_0
-  - ncurses=6.4=h313beb8_0
-  - numpy-base=1.22.3=py39h974a1f5_0
-  - openssl=1.1.1t=h1a28f6b_0
-  - pip=23.0.1=py39hca03da5_0
-  - python=3.9.16=hc0d8a6c_2
-  - re2=2022.04.01=hc377ac9_0
-  - readline=8.2=h1a28f6b_0
-  - setuptools=67.8.0=py39hca03da5_0
-  - six=1.16.0=pyhd3eb1b0_1
-  - sqlite=3.41.2=h80987f9_0
-  - tensorflow-deps=2.9.0=0
-  - tk=8.6.12=hb8d0fd4_0
-  - wheel=0.38.4=py39hca03da5_0
-  - xz=5.4.2=h80987f9_0
-  - zlib=1.2.13=h5a0b063_0
+  - abseil-cpp=20211102.0
+  - blas=1.0
+  - c-ares=1.19.0
+  - ca-certificates=2023.05.30
+  - grpc-cpp=1.48.2
+  - grpcio=1.48.2
+  - h5py=3.6.0
+  - hdf5=1.12.1
+  - krb5=1.19.4
+  - libcurl=7.88.1
+  - libcxx=14.0.6
+  - libedit=3.1.20221030
+  - libev=4.33
+  - libffi=3.4.4
+  - libgfortran=5.0.0
+  - libgfortran5=11.3.0
+  - libnghttp2=1.46.0
+  - libopenblas=0.3.21
+  - libprotobuf=3.20.3
+  - libssh2=1.10.0
+  - llvm-openmp=14.0.6
+  - ncurses=6.4
+  - numpy-base=1.22.3
+  - openssl=1.1.1t
+  - pip=23.0.1
+  - python==3.10
+  - re2=2022.04.01
+  - readline=8.2
+  - setuptools=67.8.0
+  - six=1.16.0
+  - sqlite=3.41.2
+  - tk=8.6.12
+  - wheel=0.38.4
+  - xz=5.4.2
+  - zlib=1.2.13
   - pip:
       - absl-py==1.4.0
       - astunparse==1.6.3
@@ -107,6 +107,7 @@ dependencies:
       - scipy==1.10.1
       - swig==4.1.1
       - sympy==1.12
+      - tensorflow-macos==2.12.0
       - tensorboard==2.12.3
       - tensorboard-data-server==0.7.0
       - tensorflow-estimator==2.12.0
