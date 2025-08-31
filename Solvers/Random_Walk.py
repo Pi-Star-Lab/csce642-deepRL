@@ -11,8 +11,8 @@ from Solvers.Abstract_Solver import AbstractSolver, Statistics
 
 
 class RandomWalk(AbstractSolver):
-    def __init__(self,env,options):
-        super().__init__(env,options)
+    def __init__(self,env, eval_env, options):
+        super().__init__(env, eval_env, options)
 
     def train_episode(self):
         for t in range(self.options.steps):
@@ -35,10 +35,8 @@ class RandomWalk(AbstractSolver):
             A function that takes an observation as input and returns a vector
             of action probabilities
         """
-        nA = self.env.action_space.n
-        A = np.ones(nA, dtype=float) / nA
 
         def policy_fn(observation):
-            return A
+            return np.random.choice(self.env.action_space.n)
 
         return policy_fn
