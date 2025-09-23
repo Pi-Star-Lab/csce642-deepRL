@@ -1369,5 +1369,21 @@ class ddpg(unittest.TestCase):
 if __name__ == "__main__":
     import sys
 
-    assert len(sys.argv) == 2
+    if len(sys.argv) != 2:
+        print("Usage: python autograder_windows.py <arg>\n")
+        print("Arguments:\n\
+              vi: Value Iteration\n\
+              avi: Asynchronous Value Iteration\n\
+              pi: Policy Iteration\n\
+              mc: Monte-Carlo Control\n\
+              mcis: Monte-Carlo Control with Importance Sampling\n\
+              ql: Tabular Q-Learning\n\
+              sarsa: SARSA\n\
+              aql: Q-Learning with Approximation\n\
+              dqn: Deep Q-Learning\n\
+              reinforce: REINFORCE + STATE value estimator as baseline\n\
+              a2c: A2C\n\
+              ddpg: DDPG\n")
+        sys.exit(1)
+
     unittest.main()
