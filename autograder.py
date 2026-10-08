@@ -382,6 +382,11 @@ class avi(unittest.TestCase):
 class pi(unittest.TestCase):
     points = 0
     fail = True
+    # Greedy policy w.r.t. the optimal V of the 4x4 Gridworld at gamma = 0.9, ties broken
+    # toward the lowest action index (UP=0, RIGHT=1, DOWN=2, LEFT=3). TestData/pi_A.npy
+    # and pi_b.npy hold the linear system for evaluating exactly this policy.
+    OPTIMAL_POLICY = [0, 3, 3, 2, 0, 0, 0, 2, 0, 0, 1, 2, 0, 1, 1, 0]
+
     @classmethod
     def setUpClass(self):
         command_str = "-s pi -d Gridworld -e 100 -g 0.9 --no-plots"
@@ -424,29 +429,44 @@ class pi(unittest.TestCase):
             pass
 
         solver = self.results["solver"]
+        n_actions = solver.env.action_space.n
+        expected_policy = list(self.OPTIMAL_POLICY)
+        saved_policy, saved_V = solver.policy, solver.V
+        # Improve against a fixed V instead of reading whatever policy training ended on.
+        # This is the optimal V for gamma = 0.9. Equal entries are the same float literal,
+        # so actions leading to equally valued states tie exactly and argmax must pick the
+        # lower index. The previous check read the trained policy, whose ties were decided
+        # by the last bits of V from np.linalg.solve (1e-14 noise flipped them).
         solver.V = np.array(
             [
-                0.1,
+                0.0,
                 -1.0,
                 -1.9,
                 -2.71,
-                -1.1,
-                -1.91,
-                -2.72,
-                -1.92,
-                -1.93,
-                -2.73,
-                -1.95,
-                -1.2,
-                -2.74,
-                -1.96,
-                -1.3,
+                -1.0,
+                -1.9,
+                -2.71,
+                -1.9,
+                -1.9,
+                -2.71,
+                -1.9,
+                -1.0,
+                -2.71,
+                -1.9,
+                -1.0,
                 0.0,
             ]
         )
+        # Start from a policy that disagrees with the expected one in every state, so a
+        # train_episode that leaves self.policy unchanged cannot pass.
+        solver.policy = np.eye(n_actions)[(np.array(expected_policy) + 1) % n_actions]
         patch(solver, "policy_eval", dummy_policy_eval)
-        policy = np.argmax(solver.policy, axis=1).tolist()
-        expected_policy = [0, 3, 3, 2, 0, 0, 0, 2, 0, 0, 1, 2, 0, 1, 1, 0]
+        try:
+            solver.train_episode()
+            policy = np.argmax(solver.policy, axis=1).tolist()
+        finally:
+            del solver.policy_eval  # drop the instance patch, back to the student's method
+            solver.policy, solver.V = saved_policy, saved_V
         self.assertEqual(
             policy,
             expected_policy,
@@ -457,20 +477,30 @@ class pi(unittest.TestCase):
 
     def test_iterative(self):
         og_solver = np.linalg.solve
+        og_A = np.load("TestData/pi_A.npy")
+        og_b = np.load("TestData/pi_b.npy")
         calls = 0
         def custom_solver(A, b):
             nonlocal calls
             calls += 1
-            og_A = np.load("TestData/pi_A.npy")
-            og_b = np.load("TestData/pi_b.npy")
             if not (l2_distance_bounded(np.abs(A), np.abs(og_A), 1e-3) and l2_distance_bounded(np.abs(b), np.abs(og_b), 1e-3)):
                 calls += 100
             return og_solver(A,b)
 
         solver = self.results["solver"]
+        # pi_A.npy and pi_b.npy are the system for OPTIMAL_POLICY, so evaluate exactly that
+        # policy. The policy training ended on is not a fixed target: this gridworld has
+        # several optimal policies, and which one argmax lands on depends on the last bits
+        # of V returned by np.linalg.solve, which vary with how A is assembled and with the
+        # BLAS build. Correct code that differed only there used to score 0/10.
+        saved_policy, saved_V = solver.policy, solver.V
+        solver.policy = np.eye(solver.env.action_space.n)[self.OPTIMAL_POLICY]
         np.linalg.solve = custom_solver
-        solver.policy_eval()
-        np.linalg.solve = og_solver
+        try:
+            solver.policy_eval()
+        finally:
+            np.linalg.solve = og_solver
+            solver.policy, solver.V = saved_policy, saved_V
         self.assertTrue(1 == calls, "Make sure you the linear equation coefficients provided to np.linalg.solve is correct")
         self.__class__.fail = False
 
